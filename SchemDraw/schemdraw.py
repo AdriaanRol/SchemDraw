@@ -197,11 +197,12 @@ Other:
         if len(self._state) > 0:
             self.here, self.theta = self._state.pop()
 
-    def draw(self, ax=None, showframe=False, showplot=True):
+    def draw(self, ax=None, showframe=False, showplot=True, autoscale=True):
         """ Draw the diagram.
             ax : matplotlib axis to draw to.
             showframe : Show the plot frame/axis. Useful for debugging.
             showplot : Show the plot in matplotlib window in non-interactive mode.
+            autoscale : Autoscales the view and sets axis limits
         """
 
         mpl.rcParams['font.size'] = self.fontsize
@@ -215,18 +216,19 @@ Other:
         for e in self._elm_list:
             e.draw(ax)
 
-        ax.autoscale_view(True)  # This autoscales all the shapes too
-        # NOTE: arrows don't seem to be included in autoscale!
-        xlim = np.array(ax.get_xlim())
-        ylim = np.array(ax.get_ylim())
-        xlim[0] = xlim[0]-.1   # Add a .1 unit border to pick up lost pixels
-        ylim[0] = ylim[0]-.1
-        xlim[1] = xlim[1]+.1
-        ylim[1] = ylim[1]+.1
-        ax.set_xlim(xlim)
-        ax.set_ylim(ylim)
-        w = xlim[1]-xlim[0]
-        h = ylim[1]-ylim[0]
+        if autoscale:
+            ax.autoscale_view(True)  # This autoscales all the shapes too
+            # NOTE: arrows don't seem to be included in autoscale!
+            xlim = np.array(ax.get_xlim())
+            ylim = np.array(ax.get_ylim())
+            xlim[0] = xlim[0]-.1   # Add a .1 unit border to pick up lost pixels
+            ylim[0] = ylim[0]-.1
+            xlim[1] = xlim[1]+.1
+            ylim[1] = ylim[1]+.1
+            ax.set_xlim(xlim)
+            ax.set_ylim(ylim)
+            w = xlim[1]-xlim[0]
+            h = ylim[1]-ylim[0]
 
         if not showframe:
             ax.axes.get_xaxis().set_visible(False)
@@ -240,7 +242,8 @@ Other:
 
         # Grow the figure size so that elements are always the same
         # Do after show() because it messes with size.
-        ax.get_figure().set_size_inches(self.inches_per_unit*w, self.inches_per_unit*h)
+        if autoscale:
+            ax.get_figure().set_size_inches(self.inches_per_unit*w, self.inches_per_unit*h)
 
     def save(self, fname, transparent=True, dpi=72):
         """ Save figure to file.
