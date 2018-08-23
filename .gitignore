@@ -6,3 +6,5 @@ build
 .idea/schemdraw.iml
 .idea/vcs.xml
 .idea/workspace.xml
+*.pyc
+*.egg-info/*
