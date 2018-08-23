@@ -11,6 +11,7 @@ from matplotlib.patches import Arc
 import copy
 
 from . import elements
+from . import custom_elements
 
 #--------------------------------------------------------------------
 # Set up matplotlib parameters
